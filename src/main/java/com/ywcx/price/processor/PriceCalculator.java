@@ -1,7 +1,5 @@
 package com.ywcx.price.processor;
 
-import java.text.DecimalFormat;
-
 import com.ywcx.price.bean.Fee;
 import com.ywcx.price.bean.MileageBase;
 import com.ywcx.price.bean.PriceBase;
