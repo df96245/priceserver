@@ -19,6 +19,7 @@ public class PriceBase {
 	private Double lowSpeedFeePreKm;
 	private Double outOfRangeFeePreKm;
 	private Double midnightFeePreKm;
+	private String type;
 	
 	public Integer getId() {
 		return id;
@@ -73,6 +74,19 @@ public class PriceBase {
 	}
 	public void setStartKm(Double startKm) {
 		this.startKm = startKm;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	@Override
+	public String toString() {
+		return "PriceBase [id=" + id + ", city=" + city + ", city_desc=" + city_desc + ", startKm=" + startKm
+				+ ", startFee=" + startFee + ", feePreKm=" + feePreKm + ", lowSpeedFeePreKm=" + lowSpeedFeePreKm
+				+ ", outOfRangeFeePreKm=" + outOfRangeFeePreKm + ", midnightFeePreKm=" + midnightFeePreKm + ", type="
+				+ type + "]";
 	}
 	
 }

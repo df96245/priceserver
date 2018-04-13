@@ -32,16 +32,4 @@ public class TrackController {
 		return result;
 	}
 	
-	@RequestMapping(value="/getPrice",method = RequestMethod.GET)
-	@ResponseBody
-	public Double getPrice(
-			@RequestParam (value="city",required=true) String city,
-			@RequestParam (value="entityName",required=true) String entityName,
-			@RequestParam (value="start_time",required=true) String start_time,
-			@RequestParam (value="end_time",required=true) String end_time) {
-		Double result=service.getPrice(city,entityName, start_time, end_time);
-		return result;
-	}
-	
-	
 }

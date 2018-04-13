@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,7 @@ import java.util.concurrent.Future;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
@@ -20,6 +24,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -43,15 +48,26 @@ public class HttpUtil {
 		try {
 			httpclient.start();
 			final CountDownLatch latch = new CountDownLatch(1);
-			buildUrlParams(httpMethod, urlParams);
+			if (null != urlParams) {
+				String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams));
+				httpMethod.setURI(new URI(httpMethod.getURI().toString() + "?" + getUrl));
+			}
 			Future<HttpResponse> future = httpclient.execute(httpMethod, new FutureCallbackImpl(latch));
 			latch.await();
 			HttpResponse response = future.get();
 			resJson = getHttpContent(response);
-			System.out.println("Shutting down");
+			System.out.println("callUrlGetAsyn请求结束");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -65,16 +81,23 @@ public class HttpUtil {
 
 	private String callUrlGetSyn(HttpGet httpMethod, List<BasicNameValuePair> urlParams) {
 		String resJson = null;
+		URI uri =null;
 		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(3000).setConnectTimeout(3000).build();
 		CloseableHttpClient httpSynclient = HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
 		try {
-			buildUrlParams(httpMethod, urlParams);
+			if (null != urlParams) {
+				String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams,"UTF-8"));
+				uri = new URI(httpMethod.getURI().toString() + "?" + getUrl);
+				httpMethod.setURI(uri);
+			}
 			HttpResponse response = httpSynclient.execute(httpMethod);
 			resJson = getHttpContent(response);
-			System.out.println("Shutting down");
+			System.out.println("callUrlGetSyn: "+ uri +"请求结束");
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -109,7 +132,7 @@ public class HttpUtil {
 			HttpResponse response = future.get();
 			resJson = getHttpContent(response);
 
-			System.out.println("Shutting down");
+			System.out.println("callUrlPostAsyn请求结束");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -139,7 +162,7 @@ public class HttpUtil {
 
 			resJson = getHttpContent(response);
 
-			System.out.println("Shutting down");
+			System.out.println("callUrlPostSyn请求结束");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -164,7 +187,8 @@ public class HttpUtil {
 		if (null != urlParams) {
 			try {
 				String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams));
-				httpMethod.setURI(new URI(httpMethod.getURI().toString() + "?" + getUrl));
+				String urlEncoder=URLEncoder.encode(getUrl,"UTF-8");
+				httpMethod.setURI(new URI(httpMethod.getURI().toString() + "?" + urlEncoder));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			} catch (ParseException e) {
@@ -176,10 +200,10 @@ public class HttpUtil {
 			}
 		}
 	}
+	
 
 	public String getConfCall(String url, List<BasicNameValuePair> urlParams, boolean isPost, boolean isPostBody,
 			boolean isAsyn) throws Exception {
-		String resultJson = null;
 		if (null == url || url.trim().isEmpty()) {
 			logger.warn("Url is empty or null , please check if correctly!");
 			throw new Exception("Url is empty or null , please check if correctly!");

@@ -14,6 +14,9 @@ public class BaiduApiInfo {
     
     @Value("#{configProperties['service_id']}")
     private String serviceId;
+    
+    @Value("#{configProperties['output']}")
+    private String output;
 
 	public String getAk() {
 		return ak;
@@ -38,6 +41,15 @@ public class BaiduApiInfo {
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
 	}
+
+	public String getOutput() {
+		return output;
+	}
+
+	public void setOutput(String output) {
+		this.output = output;
+	}
+	
 	
 
 }
