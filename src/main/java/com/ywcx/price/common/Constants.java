@@ -1,4 +1,4 @@
-package com.ywcx.price.constants;
+package com.ywcx.price.common;
 
 public class Constants {
 	public static final String SELF_CAR="SELF";

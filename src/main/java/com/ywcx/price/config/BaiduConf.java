@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BaiduApiInfo {
+public class BaiduConf {
 
     @Value("#{configProperties['ak']}")
     private String ak;

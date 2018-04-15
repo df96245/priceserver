@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ywcx.price.config.BaiduApiInfo;
-import com.ywcx.price.constants.Constants;
+import com.ywcx.price.common.Constants;
+import com.ywcx.price.config.BaiduConf;
 import com.ywcx.price.pricecounter.RealTimePriceCounter;
 import com.ywcx.price.util.HttpUtil;
 

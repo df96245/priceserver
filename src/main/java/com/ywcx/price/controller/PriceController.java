@@ -28,14 +28,25 @@ public class PriceController {
 		return result;
 	}
 	
-	@RequestMapping(value="/getEstPrice",method = RequestMethod.GET)
+	@RequestMapping(value="/getEstPriceByAddress",method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Double> getEstPrice(
+	public Map<String, Double> getEstPriceByAddress(
 			@RequestParam (value="originAdr",required=true) String oriAdr,
 			@RequestParam (value="destAdr",required=true) String destAdr,
 			@RequestParam (value="city",required=true) String city
 			) throws Exception {
 		Map<String, Double> priceMap=service.getEstPrice(oriAdr, destAdr,city);
+		return priceMap;
+	}
+	
+	@RequestMapping(value="/getEstPrice",method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Double> getEstPrice(
+			@RequestParam (value="oriLatLng",required=true) String oriLatLng,
+			@RequestParam (value="destLatLng",required=true) String destLatLng,
+			@RequestParam (value="city",required=true) String city
+			) throws Exception {
+		Map<String, Double> priceMap=service.getEstPrice(oriLatLng, destLatLng,city);
 		return priceMap;
 	}
 	

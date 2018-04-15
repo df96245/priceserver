@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonObject;
-import com.ywcx.price.constants.Constants;
+import com.ywcx.price.common.Constants;
 import com.ywcx.price.util.HttpUtil;
 import com.ywcx.price.util.JsonUtil;
 
