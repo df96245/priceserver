@@ -3,12 +3,14 @@ package com.ywcx.price.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 
 public class DateUtil {
-	private static Logger logger=Logger.getLogger(DateUtil.class);
+	private static Logger logger=LoggerFactory.getLogger(DateUtil.class);
 	
 	public static String getDate() {
 		Date date = new Date();

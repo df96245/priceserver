@@ -2,7 +2,7 @@ package com.ywcx.price.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ywcx.price.config.BaiduApiInfo;
+import com.ywcx.price.config.BaiduConf;
 import com.ywcx.price.util.HttpUtil;
 
 public abstract class BaiduAbstractService {
@@ -10,5 +10,5 @@ public abstract class BaiduAbstractService {
 	protected HttpUtil instance;
 
 	@Autowired
-	protected BaiduApiInfo bdConfig;
+	protected BaiduConf bdConfig;
 }

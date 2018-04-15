@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FutureCallbackImpl implements FutureCallback<HttpResponse> {
-	private static Logger LOG = LoggerFactory.getLogger(FutureCallbackImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(FutureCallbackImpl.class);
 	private StringBuilder builder = new StringBuilder();
 	private CountDownLatch latch;
 
@@ -39,7 +39,6 @@ public class FutureCallbackImpl implements FutureCallback<HttpResponse> {
 	 * 请求失败后调用该函数
 	 */
 	public void failed(Exception e) {
-
 	}
 
 	public String getCallbackResult() {
@@ -66,13 +65,11 @@ public class FutureCallbackImpl implements FutureCallback<HttpResponse> {
 		try {
 
 			body = EntityUtils.toString(entity, "utf-8");
-
 		} catch (ParseException e) {
-
-			LOG.warn("the response's content inputstream is corrupt", e);
+			logger.warn("the response's content inputstream is corrupt", e);
 		} catch (IOException e) {
 
-			LOG.warn("the response's content inputstream is corrupt", e);
+			logger.warn("the response's content inputstream is corrupt", e);
 		}
 		return body;
 	}

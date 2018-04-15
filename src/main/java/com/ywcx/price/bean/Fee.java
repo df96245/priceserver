@@ -2,7 +2,11 @@ package com.ywcx.price.bean;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Fee{
+	private static Logger logger = LoggerFactory.getLogger(Fee.class);
 	
 	private Double mileageFee=0.0D;
 	private Double lowSpeedFee=0.0D;
@@ -71,7 +75,7 @@ public class Fee{
 	}
 
 	public Double getAllFee() {
-		System.out.println("Fee [mileageFee=" + mileageFee + ", lowSpeedFee=" + lowSpeedFee
+		logger.info("Fee [mileageFee=" + mileageFee + ", lowSpeedFee=" + lowSpeedFee
 				+ ", higthWayFee=" + higthWayFee + ", midNightFee=" + midNightFee + ", outOfRangeFee=" + outOfRangeFee
 				+ "]");
 		
