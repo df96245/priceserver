@@ -38,7 +38,7 @@
         <property name="dataSource" ref="dataSource" />
         <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
         <!-- 加入定制化包路径 -->
-        <property name="packagesToScan" value="com.ywcx.price.bean" />
+        <property name="packagesToScan" value="com.ywcx.price.entity" />
 
         <property name="jpaProperties">
             <props>

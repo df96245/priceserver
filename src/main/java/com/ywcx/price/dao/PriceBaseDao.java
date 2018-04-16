@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ywcx.price.bean.PriceBase;
+import com.ywcx.price.entity.PriceBase;
 
 public interface PriceBaseDao extends JpaRepository<PriceBase, Integer> {
 	List<PriceBase> findByType(String type);

@@ -39,4 +39,7 @@ public class DateUtil {
 		return  simpleDateFormat.format(time);
 	}
 	
+	public static Long getCurrentTimeSec() {
+		return System.currentTimeMillis()/1000;
+	}
 }

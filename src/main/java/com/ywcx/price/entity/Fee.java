@@ -1,4 +1,4 @@
-package com.ywcx.price.bean;
+package com.ywcx.price.entity;
 
 import java.math.BigDecimal;
 

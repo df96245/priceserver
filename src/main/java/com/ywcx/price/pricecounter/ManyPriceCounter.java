@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ywcx.price.bean.MileageBase;
-import com.ywcx.price.bean.PriceBase;
 import com.ywcx.price.common.Constants;
+import com.ywcx.price.entity.MileageBase;
+import com.ywcx.price.entity.PriceBase;
 import com.ywcx.price.factory.PriceCounter;
 import com.ywcx.price.processor.PriceCalculator;
 import com.ywcx.price.service.reporstory.PriceBaseService;

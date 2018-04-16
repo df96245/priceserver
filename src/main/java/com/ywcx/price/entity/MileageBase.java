@@ -1,4 +1,4 @@
-package com.ywcx.price.bean;
+package com.ywcx.price.entity;
 
 //各种里程
 public class MileageBase {

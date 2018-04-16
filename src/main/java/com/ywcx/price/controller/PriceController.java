@@ -8,46 +8,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ywcx.price.common.ServerResponse;
 import com.ywcx.price.service.PriceService;
-@Controller
+@RestController
 @RequestMapping("/price")
 public class PriceController {
 	@Autowired
 	private PriceService service;
 	
 	@RequestMapping(value="/getRTPrice",method = RequestMethod.GET)
-	@ResponseBody
-	public Double getPrice(
+	public ServerResponse getRTPrice(
+			@RequestParam (value="user_type",required=true) String type,
+			@RequestParam (value="city",required=true) String city,
+			@RequestParam (value="entityName",required=true) String entityName,
+			@RequestParam (value="start_time",required=true) String start_time) throws Exception {
+		return service.getRealTimePrice(type,city,entityName, start_time, null);
+//		return result;
+	}
+	
+	@RequestMapping(value="/getFinalPrice",method = RequestMethod.GET)
+	public ServerResponse getFinalPrice(
 			@RequestParam (value="user_type",required=true) String type,
 			@RequestParam (value="city",required=true) String city,
 			@RequestParam (value="entityName",required=true) String entityName,
 			@RequestParam (value="start_time",required=true) String start_time,
 			@RequestParam (value="end_time",required=true) String end_time) throws Exception {
-		Double result=service.getRealTimePrice(type,city,entityName, start_time, end_time);
-		return result;
+		return service.getRealTimePrice(type,city,entityName, start_time, end_time);
 	}
 	
-	@RequestMapping(value="/getEstPriceByAddress",method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Double> getEstPriceByAddress(
-			@RequestParam (value="originAdr",required=true) String oriAdr,
-			@RequestParam (value="destAdr",required=true) String destAdr,
-			@RequestParam (value="city",required=true) String city
-			) throws Exception {
-		Map<String, Double> priceMap=service.getEstPrice(oriAdr, destAdr,city);
-		return priceMap;
-	}
 	
 	@RequestMapping(value="/getEstPrice",method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, Double> getEstPrice(
+	public ServerResponse getEstPrice(
 			@RequestParam (value="oriLatLng",required=true) String oriLatLng,
 			@RequestParam (value="destLatLng",required=true) String destLatLng,
 			@RequestParam (value="city",required=true) String city
 			) throws Exception {
-		Map<String, Double> priceMap=service.getEstPrice(oriLatLng, destLatLng,city);
-		return priceMap;
+		return service.getEstPrice(oriLatLng, destLatLng,city);
 	}
 	
 	
