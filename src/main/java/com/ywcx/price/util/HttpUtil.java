@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ywcx.price.callback.FutureCallbackImpl;
+import com.ywcx.price.common.Constants;
 import com.ywcx.price.config.HttpConf;
 import com.ywcx.price.exception.BaiduException;
 
@@ -57,11 +58,7 @@ public class HttpUtil {
 		try {
 			httpclient.start();
 			final CountDownLatch latch = new CountDownLatch(1);
-			if (null != urlParams) {
-				String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams));
-				uri = new URI(httpMethod.getURI().toString() + "?" + getUrl);
-				httpMethod.setURI(uri);
-			}
+			uri = buildUrlParams(httpMethod, urlParams, uri);
 			Future<HttpResponse> future = httpclient.execute(httpMethod, new FutureCallbackImpl(latch));
 			latch.await();
 			HttpResponse response = future.get();
@@ -97,23 +94,24 @@ public class HttpUtil {
 				.setRetryHandler(new DefaultHttpRequestRetryHandler())
 				.setDefaultRequestConfig(requestConfig).build();
 		try {
-			if (null != urlParams) {
-				String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams, "UTF-8"));
-				uri = new URI(httpMethod.getURI().toString() + "?" + getUrl);
-				httpMethod.setURI(uri);
-			}
+			uri = buildUrlParams(httpMethod, urlParams, uri);
 			HttpResponse response = httpSynclient.execute(httpMethod);
 			resJson = getHttpContent(response);
 			Integer retryTimes = conf.getRetryTimes();
-			for (int i = 0; i < retryTimes; i++) {
+			for (int i = 1; i <= retryTimes; i++) {
 				if (resJson.contains("\"status\":0") || !resJson.contains("status")) {
 					break;
 				}
-				if (i==retryTimes) {
-					throw new BaiduException(resJson);
+				if (resJson.contains(Constants.OUT_TIME_RANGE)) {
+					resJson=JsonUtil.buildSimpleJson(2, Constants.OUT_TIME_RANGE);
+					break;
 				}
-				Thread.sleep(conf.getRetryInterval());
-				logger.warn("Havn't received response correctly. retry {} times , response json as below {}",i,resJson );
+				if (i==retryTimes) {
+					resJson=JsonUtil.buildSimpleJson(2, Constants.OVER_RETRY_TIMES);
+				}
+				Integer retryInterval = conf.getRetryInterval();
+				Thread.sleep(retryInterval);
+				logger.warn("Havn't received response correctly. sleep {} seconds and retry {} times , response json as below {}",retryInterval/1000,i,resJson );
 			}
 			logger.info("callUrlGetAsyn {} 请求结束. 结果：{}", uri, resJson);
 		} catch (ClientProtocolException e) {
@@ -132,6 +130,16 @@ public class HttpUtil {
 			}
 		}
 		return resJson;
+	}
+
+	private URI buildUrlParams(HttpGet httpMethod, List<BasicNameValuePair> urlParams, URI uri)
+			throws IOException, UnsupportedEncodingException, URISyntaxException {
+		if (null != urlParams) {
+			String getUrl = EntityUtils.toString(new UrlEncodedFormEntity(urlParams, "UTF-8"));
+			uri = new URI(httpMethod.getURI().toString() + "?" + getUrl);
+			httpMethod.setURI(uri);
+		}
+		return uri;
 	}
 
 	// TODO 提出参数

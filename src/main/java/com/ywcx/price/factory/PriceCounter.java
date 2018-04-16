@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.ywcx.price.bean.MileageBase;
-import com.ywcx.price.bean.PriceBase;
 import com.ywcx.price.common.Constants;
+import com.ywcx.price.entity.MileageBase;
+import com.ywcx.price.entity.PriceBase;
 
 public abstract class PriceCounter {
 	

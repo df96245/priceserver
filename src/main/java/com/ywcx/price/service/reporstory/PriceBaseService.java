@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ywcx.price.bean.PriceBase;
 import com.ywcx.price.dao.PriceBaseDao;
+import com.ywcx.price.entity.PriceBase;
 
 @Service
 @Transactional

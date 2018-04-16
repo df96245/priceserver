@@ -1,8 +1,8 @@
 package com.ywcx.price.processor;
 
-import com.ywcx.price.bean.Fee;
-import com.ywcx.price.bean.MileageBase;
-import com.ywcx.price.bean.PriceBase;
+import com.ywcx.price.entity.Fee;
+import com.ywcx.price.entity.MileageBase;
+import com.ywcx.price.entity.PriceBase;
 import com.ywcx.price.util.NumberUtil;
 
 public class PriceCalculator {
