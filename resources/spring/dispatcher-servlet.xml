@@ -25,23 +25,5 @@
 			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
-	
-	<!-- 用于返回json格式 -->
-    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">    
-        <property name="supportedMediaTypes">    
-            <list>
-                <value>application/x-www-form-urlencoded;charset=UTF-8</value>
-            </list>
-        </property>
-    </bean>
- 
-     <!-- 完成请求和注解POJO的映射 -->
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-         <property name="messageConverters">
-            <list>
-                <ref bean="mappingJacksonHttpMessageConverter" />
-            </list>
-        </property>
-    </bean>
 
 </beans>

@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context" 
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:util="http://www.springframework.org/schema/util" 
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans   
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/aop
   http://www.springframework.org/schema/aop/spring-aop.xsd
   http://www.springframework.org/schema/context   
   http://www.springframework.org/schema/context/spring-context-4.0.xsd
-  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-  http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd  ">
 
-	<!-- 属性文件位置 -->
-    <context:property-placeholder location="classpath:jdbc.properties" />
+	<!--load jdbc.properties here -->
+	<context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
 
-    <!-- 数据源 -->
-    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
-        destroy-method="close">
-        <!-- 数据库驱动 -->
-        <property name="driverClass" value="${jdbc.driverClassName}" />
-        <!-- 相应驱动的jdbcUrl-->
-        <property name="jdbcUrl" value="${jdbc.url}" />
-        <!-- 数据库的用户名 -->
-        <property name="username" value="${jdbc.username}" />
-        <!-- 数据库的密码 -->
-        <property name="password" value="${jdbc.password}" />
-    </bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
 
-    <!-- JPA实体管理器工厂 -->
-    <bean id="entityManagerFactory"
-        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
-        <!-- 加入定制化包路径 -->
-        <property name="packagesToScan" value="com.ywcx.price.entity" />
 
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.current_session_context_class">thread</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop><!-- validate/update/create -->
-                <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.format_sql">false</prop>
-                
-                <!-- 建表的命名规则 -->
-                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
-                
-            </props>
-        </property>
-    </bean>
-    
-    <!-- 设置JPA实现厂商的特定属性 -->
-    <bean id="hibernateJpaVendorAdapter"
-        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-        <property name="databasePlatform" value="${hibernate.dialect}"/>
-    </bean>
-    
-    <!-- Jpa 事务配置 -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
+	<!--2.SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hbm2ddl.auto">update</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+				<!--with current thread bind session -->
+				<!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
+			</props>
+		</property>
 
-    <!-- Spring Data Jpa配置 -->
-    <jpa:repositories base-package="com.ywcx.price"  transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>
-    
-    <!-- 使用annotation定义事务 -->
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+		<property name="packagesToScan">
+			<list>
+				<value>com.ywcx.price.bean</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 5.事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!--6.事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="delete*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="insert*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置切面 -->
+	<aop:config expose-proxy="true" proxy-target-class="true">
+		<aop:advisor advice-ref="transactionAdvice"
+			pointcut="execution(* com.ywcx.price.service..*.*(..))" />
+	</aop:config>
+
 </beans>

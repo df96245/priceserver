@@ -3,14 +3,12 @@ package com.ywcx.price.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.log4j.Logger;
 
 
 
 public class DateUtil {
-	private static Logger logger=LoggerFactory.getLogger(DateUtil.class);
+	private static Logger logger=Logger.getLogger(DateUtil.class);
 	
 	public static String getDate() {
 		Date date = new Date();
@@ -39,7 +37,4 @@ public class DateUtil {
 		return  simpleDateFormat.format(time);
 	}
 	
-	public static Long getCurrentTimeSec() {
-		return System.currentTimeMillis()/1000;
-	}
 }

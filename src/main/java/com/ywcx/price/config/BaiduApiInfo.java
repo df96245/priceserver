@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BaiduConf {
+public class BaiduApiInfo {
 
     @Value("#{configProperties['ak']}")
     private String ak;
@@ -14,9 +14,6 @@ public class BaiduConf {
     
     @Value("#{configProperties['service_id']}")
     private String serviceId;
-    
-    @Value("#{configProperties['output']}")
-    private String output;
 
 	public String getAk() {
 		return ak;
@@ -41,15 +38,6 @@ public class BaiduConf {
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
 	}
-
-	public String getOutput() {
-		return output;
-	}
-
-	public void setOutput(String output) {
-		this.output = output;
-	}
-	
 	
 
 }
